@@ -31,6 +31,11 @@ module.exports = {
     justifyContent: 'center',
     alignItems: 'center',
   },
+  navBarButtonImage: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    minWidth: 50,
+  },
   navBarButtonText: {
     fontSize: 17,
     letterSpacing: 0.5,

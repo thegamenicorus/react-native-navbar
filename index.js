@@ -4,20 +4,21 @@ import {
   StatusBar,
   Text,
   View,
-  Platform
+  Platform,
+  Image
 } from 'react-native';
 
 import NavbarButton from './NavbarButton';
 import styles from './styles';
 
 const ButtonShape = {
-  title: PropTypes.string.isRequired,
+  //title: PropTypes.string.isRequired,
   style: PropTypes.any,
   handler: PropTypes.func,
 };
 
 const TitleShape = {
-  title: PropTypes.string.isRequired,
+  //title: PropTypes.string.isRequired,
   tintColor: PropTypes.string,
 };
 
@@ -44,6 +45,8 @@ function customizeStatusBar(data) {
 }
 
 class NavigationBar extends Component {
+  static Type = { 'Text' : 0, 'Image': 1 }
+  
   componentDidMount() {
     customizeStatusBar(this.props.statusBar);
   }
@@ -57,10 +60,9 @@ class NavigationBar extends Component {
       <View style={styles.navBarButtonContainer}>
         {(!!data.props) ? data : (
           <NavbarButton
-            title={data.title}
+            {...data}
             style={[data.style, style, ]}
-            tintColor={data.tintColor}
-            handler={data.handler}/>
+          />
         )}
       </View>
     );
@@ -70,17 +72,29 @@ class NavigationBar extends Component {
     if (!!data.props) {
       return <View style={styles.customTitle}>{data}</View>;
     }
+    if(data.type == NavigationBar.Type.Image){
+      return (
+        <View style={styles.navBarTitleContainer}>
+          <Image
+            style={data.style}
+            resizeMode = {data.resizeMode}
+            source={data.source} 
+          />
+        </View>
+      )
+    }
+    else{
+      const colorStyle = data.tintColor ? { color: data.tintColor, } : null;
 
-    const colorStyle = data.tintColor ? { color: data.tintColor, } : null;
-
-    return (
-      <View style={styles.navBarTitleContainer}>
-        <Text
-          style={[styles.navBarTitleText, colorStyle, ]}>
-          {data.title}
-        </Text>
-      </View>
-    );
+      return (
+        <View style={styles.navBarTitleContainer}>
+          <Text
+            style={[styles.navBarTitleText, colorStyle, ]}>
+            {data.title}
+          </Text>
+        </View>
+      );
+    }
   }
 
   render() {
@@ -102,8 +116,8 @@ class NavigationBar extends Component {
         {statusBar}
         <View style={[styles.navBar, this.props.style, ]}>
           {this.getTitleElement(this.props.title)}
-          {this.getButtonElement(this.props.leftButton, { marginLeft: 8, })}
-          {this.getButtonElement(this.props.rightButton, { marginRight: 8, })}
+          {this.getButtonElement(this.props.leftButton, { marginLeft: 8, justifyContent: 'flex-start'})}
+          {this.getButtonElement(this.props.rightButton, { marginRight: 8, justifyContent: 'flex-end' })}
         </View>
       </View>
     );
